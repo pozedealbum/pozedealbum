@@ -58,53 +58,53 @@ namespace PKB.WPF.Common
             }
         }
 
-        public Action<InsertingItemArgs> SyncInsertItem { get; set; }
+        public Action<InsertingItemArgs> OnInsertingItem { get; set; }
 
-        public Action<RemovingItemArgs> SyncRemoveItem { get; set; }
+        public Action<RemovingItemArgs> OnRemovingItem { get; set; }
 
-        public Action<MovingItemArgs> SyncMoveIntem { get; set; }
+        public Action<MovingItemArgs> OnMovingIntem { get; set; }
 
-        public Action<ReplacingItemArgs> SyncReplaceItem { get; set; }
+        public Action<ReplacingItemArgs> OnReplacingItem { get; set; }
 
-        public Action SyncClearItems { get; set; }
+        public Action OnClearingItems { get; set; }
 
         public SyncChangesObservableCollection(IEnumerable<T> collection)
             : base(collection)
         {
-            SyncInsertItem = DefaultHandlerForInsert;
-            SyncRemoveItem = DefaultHandlerForRemove;
-            SyncClearItems = DefaultHandlerForClear;
-            SyncMoveIntem = DefaultHandlerForMove;
-            SyncReplaceItem = DefaultHandlerForReplace;
+            OnInsertingItem = DefaultHandlerForInsert;
+            OnRemovingItem = DefaultHandlerForRemove;
+            OnClearingItems = DefaultHandlerForClear;
+            OnMovingIntem = DefaultHandlerForMove;
+            OnReplacingItem = DefaultHandlerForReplace;
         }
 
         protected override void ClearItems()
         {
-            SyncClearItems.Invoke();
+            OnClearingItems.Invoke();
             base.ClearItems();
         }
 
         protected override void InsertItem(int index, T item)
         {
-            SyncInsertItem.Invoke(new InsertingItemArgs(index, item));
+            OnInsertingItem.Invoke(new InsertingItemArgs(index, item));
             base.InsertItem(index, item);
         }
 
         protected override void MoveItem(int oldIndex, int newIndex)
         {
-            SyncMoveIntem.Invoke(new MovingItemArgs(oldIndex, newIndex, this[oldIndex]));
+            OnMovingIntem.Invoke(new MovingItemArgs(oldIndex, newIndex, this[oldIndex]));
             base.MoveItem(oldIndex, newIndex);
         }
 
         protected override void RemoveItem(int index)
         {
-            SyncRemoveItem.Invoke(new RemovingItemArgs(index, this[index]));
+            OnRemovingItem.Invoke(new RemovingItemArgs(index, this[index]));
             base.RemoveItem(index);
         }
 
         protected override void SetItem(int index, T item)
         {
-            SyncReplaceItem.Invoke(new ReplacingItemArgs(index, this[index], item));
+            OnReplacingItem.Invoke(new ReplacingItemArgs(index, this[index], item));
             base.SetItem(index, item);
         }
 
@@ -120,20 +120,20 @@ namespace PKB.WPF.Common
 
         private void DefaultHandlerForReplace(ReplacingItemArgs args)
         {
-            SyncRemoveItem(new RemovingItemArgs(args.Index, args.OldItem));
-            SyncInsertItem(new InsertingItemArgs(args.Index, args.NewItem));
+            OnRemovingItem(new RemovingItemArgs(args.Index, args.OldItem));
+            OnInsertingItem(new InsertingItemArgs(args.Index, args.NewItem));
         }
 
         private void DefaultHandlerForMove(MovingItemArgs args)
         {
-            SyncRemoveItem(new RemovingItemArgs(args.OldIndex, args.Item));
-            SyncInsertItem(new InsertingItemArgs(args.NewIndex, args.Item));
+            OnRemovingItem(new RemovingItemArgs(args.OldIndex, args.Item));
+            OnInsertingItem(new InsertingItemArgs(args.NewIndex, args.Item));
         }
 
         private void DefaultHandlerForClear()
         {
             while (Count > 0)
-                SyncRemoveItem(new RemovingItemArgs(Count - 1, this[Count - 1]));
+                OnRemovingItem(new RemovingItemArgs(Count - 1, this[Count - 1]));
         }
     }
 }

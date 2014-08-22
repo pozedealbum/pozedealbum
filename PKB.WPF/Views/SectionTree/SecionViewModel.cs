@@ -29,7 +29,7 @@ namespace PKB.WPF.Views.SectionTree
             Subsections = new SyncChangesObservableCollection<SectionViewModel>(
                 model.Subsections.Select(x => new SectionViewModel(x) { Parent = this.ToMaybe() }))
             {
-                SyncInsertItem = args =>
+                OnInsertingItem = args =>
                 {
                     if (args.Item.Parent.HasValue)
                         throw new InvalidOperationException();
@@ -38,7 +38,7 @@ namespace PKB.WPF.Views.SectionTree
                     args.Item.Parent = this.ToMaybe();
                 },
 
-                SyncRemoveItem = args =>
+                OnRemovingItem = args =>
                 {
                     if (args.Item.Parent.Value != this)
                         throw new InvalidOperationException();
