@@ -1,0 +1,10 @@
+﻿<Application
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:converters="clr-namespace:PKB.WPF.Shared.Converters"
+             x:Class="PKB.WPF.App"
+             StartupUri="Views/MainWindow.xaml">
+    <Application.Resources>
+        <converters:MaybeToObjectConverter  x:Key="MaybeToObject" />
+    </Application.Resources>
+</Application>

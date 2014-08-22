@@ -1,0 +1,52 @@
+﻿<UserControl x:Class="PKB.WPF.Views.SectionTreeView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:telerik="http://schemas.telerik.com/2008/xaml/presentation"
+             xmlns:views="clr-namespace:PKB.WPF.Views"
+             mc:Ignorable="d" 
+             d:DesignHeight="300" d:DesignWidth="300">
+    <UserControl.Resources>
+        <Style TargetType="telerik:RadTreeView">
+            <Setter Property="IsDragDropEnabled" Value="True"/>
+            <Setter Property="IsDragPreviewEnabled" Value="True"/>
+            <Setter Property="IsDragTooltipEnabled" Value="True"/>
+            <Setter Property="IsDropPreviewLineEnabled" Value="True"/>
+            <Setter Property="IsSingleExpandPath" Value="False"/>
+            <Setter Property="IsExpandOnDblClickEnabled" Value="False"/>
+            <Setter Property="IsExpandOnSingleClickEnabled" Value="False"/>
+            <Setter Property="IsEditable" Value="True"/>
+            <Setter Property="SelectionMode" Value="Multiple"/>
+            <Setter Property="IsLineEnabled" Value="True"/>
+            <Setter Property="telerik:TreeViewSettings.DragDropExecutionMode" Value="New"/>
+        </Style>
+    </UserControl.Resources>
+    <Grid>
+        <telerik:RadTreeView ItemDoubleClick="OnItemDoubleClick"
+            x:Name="MyTree"
+            ItemsSource="{Binding Sections}">
+            <telerik:RadTreeView.ItemTemplate>
+                <HierarchicalDataTemplate ItemsSource="{Binding Subsections}">
+                    <StackPanel Orientation="Horizontal" Height="27">
+                        <TextBlock   Text="{Binding Name}" VerticalAlignment="Center" />
+
+                        <ItemsControl  ItemsSource="{Binding Topics}">
+                            <ItemsControl.ItemsPanel>
+                                <ItemsPanelTemplate>
+                                    <StackPanel Orientation="Horizontal" />
+                                </ItemsPanelTemplate>
+                            </ItemsControl.ItemsPanel>
+
+                            <ItemsControl.ItemTemplate>
+                                <DataTemplate>
+                                    <views:TopicView   Margin="10,0,0,0" />
+                                </DataTemplate>
+                            </ItemsControl.ItemTemplate>
+                        </ItemsControl>
+                    </StackPanel>
+                </HierarchicalDataTemplate>
+            </telerik:RadTreeView.ItemTemplate>
+        </telerik:RadTreeView>
+    </Grid>
+</UserControl>

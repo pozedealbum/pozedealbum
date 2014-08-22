@@ -1,0 +1,17 @@
+﻿<common:AppUserControl x:Class="PKB.WPF.Views.Main.MainView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:common="clr-namespace:PKB.WPF.Common"
+             xmlns:design="clr-namespace:PKB.WPF.Design"
+             xmlns:main="clr-namespace:PKB.WPF.Views.Main"
+             common:PresenterLocator.AutoWirePresenter="True"
+             mc:Ignorable="d"
+             x:TypeArguments="main:MainPresenter"
+             d:DataContext="{d:DesignInstance Type=design:MainViewModelDesign, IsDesignTimeCreatable=True}"
+             d:DesignHeight="400" d:DesignWidth="500">
+    <Grid>
+        <ContentControl Content="{Binding SectionTreeView}" />
+    </Grid>
+</common:AppUserControl>

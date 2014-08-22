@@ -1,0 +1,31 @@
+﻿<c:AppUserControl  DisplayName="Add section"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:p="clr-namespace:MVPVM;assembly=MVPVM"
+        xmlns:c="clr-namespace:PKB.WPF.Common"
+        xmlns:editableSection="clr-namespace:PKB.WPF.Views.SectionTree.EditableSection"
+        x:TypeArguments="editableSection:EditableSectionPresenter"
+        mc:Ignorable="d" x:Class="PKB.WPF.Views.SectionTree.EditableSection.EditableSectionView" 
+        Height="123.333" Width="500"
+        c:PresenterLocator.AutoWirePresenter="True">
+
+    <StackPanel Margin="20">
+        <Grid>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="Auto" />
+                <ColumnDefinition Width="15px" />
+                <ColumnDefinition Width="*"/>
+            </Grid.ColumnDefinitions>
+
+            <TextBlock   Grid.Row="0" Grid.Column="0" Text="Name:" VerticalAlignment="Center" HorizontalAlignment="Right"/>
+            <TextBox KeyUp="UIElement_OnKeyUp" x:Name="_sectionNameTextBox"  Text="{Binding Name, UpdateSourceTrigger=PropertyChanged}" Grid.Row="0" Grid.Column="2" Margin="0,10"/>
+        </Grid>
+
+        <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" Margin="0,20,0,0">
+            <Button Content="Add" Command="{p:PresenterBinding ConfirmCommand}" Width="70"/>
+            <Button Content="Cancel" Command="{p:PresenterBinding CancelCommand}" Width="70" Margin="30,0,0,0"/>
+        </StackPanel>
+    </StackPanel>
+</c:AppUserControl>
