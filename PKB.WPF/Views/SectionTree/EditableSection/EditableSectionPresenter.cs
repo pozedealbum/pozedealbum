@@ -1,13 +1,13 @@
 ﻿using Microsoft.Practices.Prism.Commands;
 using PKB.WPF.Common;
-using PKB.WPF.Views.SectionTree;
+using PKB.WPF.Interactivity;
 
 namespace PKB.WPF.Views.SectionTree.EditableSection
 {
     public class EditableSectionPresenter : Presenter<EditableSectionViewModel>,
-        IEditableSectionController
+        IInteractionRequestAware<EditSectionConfirmation>
     {
-        private SectionConfirmation _interaction;
+        private EditSectionConfirmation _interaction;
 
         public DelegateCommand ConfirmCommand { get; private set; }
 
@@ -26,7 +26,7 @@ namespace PKB.WPF.Views.SectionTree.EditableSection
 
         private void Confirm()
         {
-            _interaction.SectionName = ViewModel.Name.Trim();
+            _interaction.Section.Name = ViewModel.Name.Trim();
             _interaction.Confirm();
         }
 
@@ -35,10 +35,10 @@ namespace PKB.WPF.Views.SectionTree.EditableSection
             _interaction.Cancel();
         }
 
-        public void OnInteractionRequested(SectionConfirmation interaction)
+        public void OnInteractionRequested(EditSectionConfirmation interaction)
         {
             _interaction = interaction;
-            ViewModel.Name = _interaction.SectionName;
+            ViewModel.Name = _interaction.Section.Name;
         }
     }
 }

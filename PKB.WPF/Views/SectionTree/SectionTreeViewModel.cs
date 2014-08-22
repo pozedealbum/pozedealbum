@@ -1,6 +1,4 @@
-﻿using System.Text.RegularExpressions;
-using PKB.DomainModel;
-using PKB.Utility;
+﻿using PKB.Utility;
 using PKB.WPF.Common;
 
 namespace PKB.WPF.Views.SectionTree

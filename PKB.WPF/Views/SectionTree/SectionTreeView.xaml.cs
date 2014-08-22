@@ -112,7 +112,7 @@ namespace PKB.WPF.Views.SectionTree
 
         private void OnDeleteConfirmation(object sender, InteractionRequestedEventArgs e)
         {
-            var interaction = (SectionConfirmation)e.Interaction;
+            var interaction = (EditSectionConfirmation)e.Interaction;
 
             if (IsDeleteConfirmed(interaction))
                 interaction.Confirm();
@@ -120,10 +120,10 @@ namespace PKB.WPF.Views.SectionTree
                 interaction.Cancel();
         }
 
-        private bool IsDeleteConfirmed(SectionConfirmation interaction)
+        private bool IsDeleteConfirmed(EditSectionConfirmation interaction)
         {
             var window = Window.GetWindow(this);
-            string messageText = string.Format("Are you sure you want to delete {0} ?", interaction.SectionName);
+            string messageText = string.Format("Are you sure you want to delete {0} ?", interaction.Section.Name);
             const string caption = "Delete confirmation";
 
             return MessageBoxResult.OK == (window != null

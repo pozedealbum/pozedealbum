@@ -12,7 +12,13 @@ namespace PKB.WPF.Views.SectionTree
         private readonly Section _model;
 
         public SectionViewModel()
-            : this(new Section(""))
+            : this("")
+        {
+
+        }
+
+        public SectionViewModel(string name)
+            : this(new Section(name))
         {
 
         }

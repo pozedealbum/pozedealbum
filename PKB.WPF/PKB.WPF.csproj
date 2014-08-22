@@ -163,7 +163,6 @@
     <Compile Include="Interactivity\TriggerActions\PopupWindow.cs" />
     <Compile Include="Common\Interfaces\IHaveDisplayName.cs" />
     <Compile Include="Interactivity\InteractionRequest.cs" />
-    <Compile Include="Views\SectionTree\EditableSection\IEditableSectionController.cs" />
     <Compile Include="Views\ListSection\ListSectionPresenter.cs" />
     <Compile Include="Views\ListSection\ListSectionView.xaml.cs">
       <DependentUpon>ListSectionView.xaml</DependentUpon>
@@ -184,7 +183,7 @@
     <Compile Include="Properties\Annotations.cs" />
     <Compile Include="Common\SyncChangesObservableCollection.cs" />
     <Compile Include="Shared\Converters\MaybeToObjectConverter.cs" />
-    <Compile Include="Views\SectionTree\SectionConfirmation.cs" />
+    <Compile Include="Views\SectionTree\EditSectionConfirmation.cs" />
     <Compile Include="Interactivity\Confirmation.cs" />
     <Compile Include="Views\SectionTree\EditableSection\EditableSectionPresenter.cs" />
     <Compile Include="Views\SectionTree\InsertSectionMode.cs" />
