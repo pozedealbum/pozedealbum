@@ -1,11 +1,5 @@
 ﻿using System;
-using Microsoft.Practices.Prism.Mvvm;
-using MVPVM;
 using System.Windows;
-using PKB.DomainModel;
-using PKB.WPF.Common;
-using PKB.WPF.Common.Interfaces;
-using PKB.WPF.Views.SectionTree;
 
 namespace PKB.WPF.Views
 {

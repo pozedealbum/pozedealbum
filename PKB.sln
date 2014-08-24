@@ -11,6 +11,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PKB.WPF", "PKB.WPF\PKB.WPF.
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MVPVM", "MVPVM\MVPVM.csproj", "{19BA33B2-247C-4767-8318-712B869F4113}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PKB.Application", "PKB.Application\PKB.Application.csproj", "{F52A8057-094C-4D58-9942-4DE3955A3413}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -33,6 +35,10 @@ Global
 		{19BA33B2-247C-4767-8318-712B869F4113}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{19BA33B2-247C-4767-8318-712B869F4113}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{19BA33B2-247C-4767-8318-712B869F4113}.Release|Any CPU.Build.0 = Release|Any CPU
+		{F52A8057-094C-4D58-9942-4DE3955A3413}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F52A8057-094C-4D58-9942-4DE3955A3413}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F52A8057-094C-4D58-9942-4DE3955A3413}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F52A8057-094C-4D58-9942-4DE3955A3413}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

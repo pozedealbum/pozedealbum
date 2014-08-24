@@ -1,5 +1,4 @@
 ﻿using Microsoft.Practices.Prism.Commands;
-using PKB.DomainModel;
 using PKB.WPF.Common;
 using PKB.WPF.Interactivity;
 
@@ -74,10 +73,10 @@ namespace PKB.WPF.Views.SectionTree
             return CurrentSection() != ViewModel.Root;
         }
 
-        public void ChangeRoot(Section root)
+        public void ChangeRoot(SectionViewModel root)
         {
             ViewModel.SelectedItem = null;
-            ViewModel.Root = new SectionViewModel(root);
+            ViewModel.Root = root;
         }
 
         private void AddInside(SectionViewModel selectedSection, SectionViewModel newSection)

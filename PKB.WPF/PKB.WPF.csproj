@@ -269,9 +269,9 @@
       <Project>{19ba33b2-247c-4767-8318-712b869f4113}</Project>
       <Name>MVPVM</Name>
     </ProjectReference>
-    <ProjectReference Include="..\PKB.DomainModel\PKB.DomainModel.csproj">
-      <Project>{24fe2ef5-844e-4d46-9a9a-185fe4b09236}</Project>
-      <Name>PKB.DomainModel</Name>
+    <ProjectReference Include="..\PKB.Application\PKB.Application.csproj">
+      <Project>{f52a8057-094c-4d58-9942-4de3955a3413}</Project>
+      <Name>PKB.Application</Name>
     </ProjectReference>
     <ProjectReference Include="..\PKB.Utility\PKB.Utility.csproj">
       <Project>{513614fb-dcb1-46ce-aaac-b8dc59d3e087}</Project>
