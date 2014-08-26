@@ -1,27 +1,30 @@
 ﻿using PKB.DomainModel.Common;
+using PKB.Infrastructure.Eventing;
+using PKB.Utility;
 
 namespace PKB.DomainModel.Events
 {
-    public class NewSectionAddedEvent
+    public class NewSectionAddedEvent : IDomainEvent
     {
-        public readonly SectionId NewSectionId;
-        public readonly string NewSectionName;
-        public readonly SectionId RootSectionId;
-        public readonly SectionId NewSectionParentId;
-        public readonly int NewSectionIndex;
+        public readonly SectionId SectionId;
+        public readonly string SectionName;
+        public readonly ResourceId ResourceId;
+        public readonly Maybe<SectionId> SectionParentId;
+        public readonly int SectionIndex;
 
         public NewSectionAddedEvent(
-            SectionId newSectionId, 
-            string newSectionName, 
-            SectionId rootSectionId, 
-            SectionId newSectionParentId, 
-            int newSectionIndex)
+            SectionId sectionId, 
+            string sectionName, 
+            ResourceId resourceId, 
+            Maybe<SectionId> sectionParentId,
+            int sectionIndex
+            )
         {
-            NewSectionId = newSectionId;
-            NewSectionName = newSectionName;
-            RootSectionId = rootSectionId;
-            NewSectionParentId = newSectionParentId;
-            NewSectionIndex = newSectionIndex;
+            SectionId = sectionId;
+            SectionName = sectionName;
+            ResourceId = resourceId;
+            SectionParentId = sectionParentId;
+            SectionIndex = sectionIndex;
         }
     }
 }

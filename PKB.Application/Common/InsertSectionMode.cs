@@ -1,4 +1,4 @@
-﻿namespace PKB.WPF.Views.SectionTree
+﻿namespace PKB.Application.Common
 {
     public enum InsertSectionMode
     {

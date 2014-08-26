@@ -6,12 +6,12 @@ namespace PKB.WPF.Views.SectionTree
     public class SectionTreeViewModel : ViewModelBase
     {
         private Maybe<SectionViewModel> _selectedItem;
-        private SectionViewModel _root = new SectionViewModel();
+        private ResourceViewModel _resource = new ResourceViewModel();
 
-        public SectionViewModel Root
+        public ResourceViewModel Resource
         {
-            get { return _root; }
-            set { SetProperty(ref _root, value); }
+            get { return _resource; }
+            set { SetProperty(ref _resource, value); }
         }
 
         public Maybe<SectionViewModel> SelectedItem

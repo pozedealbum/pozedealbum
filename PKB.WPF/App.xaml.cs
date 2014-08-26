@@ -1,32 +1,25 @@
-﻿using System;
+﻿using Autofac;
+using Autofac.Core;
+using MVPVM;
+using PKB.Infrastructure;
+using PKB.Infrastructure.Commanding;
+using PKB.Infrastructure.Eventing;
+using PKB.Infrastructure.Messaging;
+using PKB.WPF.Common;
+using PKB.WPF.Common.Interfaces;
+using System;
 using System.Globalization;
 using System.Linq;
 using System.Reflection;
 using System.Windows;
-using Autofac;
-using Autofac.Core;
-using Microsoft.Practices.Prism;
-using Microsoft.Practices.Prism.Mvvm;
-using MVPVM;
-using PKB.WPF.Common;
-using PKB.WPF.Common.Interfaces;
-using PKB.WPF.EventAggregator;
-using PKB.WPF.Views;
-using PKB.WPF.Views.SectionTree.EditableSection;
-using PKB.WPF.Views.Main;
-using PKB.WPF.Views.SectionTree;
 
 namespace PKB.WPF
 {
-
-
-    public partial class App : Application
+    public partial class App
     {
-
         protected override void OnStartup(StartupEventArgs e)
         {
             base.OnStartup(e);
-
 
             var builder = new ContainerBuilder();
 
@@ -46,9 +39,18 @@ namespace PKB.WPF
                    SetView(t);
                });
 
-            builder.RegisterType<EventPublisher>().As<IEventPublisher>();
-            builder.RegisterGeneric(typeof(EventPublisher<>)).As(typeof(IEventPublisher<>));
-            builder.RegisterType<DictonaryHandlersManager>().As<IEventSubscriber>().As<IHandlersManager>().SingleInstance();
+            builder.RegisterType<PublishEventOnMessageBus>().As<IEventPublisher>();
+            builder.RegisterGeneric(typeof(PublishEventOnMessageBus<>)).As(typeof(IEventPublisher<>));
+
+            builder.RegisterType<PublishCommandOnMessageBus>().As<ICommandPublisher>();
+            builder.RegisterGeneric(typeof(PublishCommandOnMessageBus<>)).As(typeof(ICommandPublisher<>));
+
+            builder.RegisterType<PublishMessageOnMessageBus>().As<IMessagePublisher>();
+            builder.RegisterGeneric(typeof(PublishMessageOnMessageBus<>)).As(typeof(IMessagePublisher<>));
+
+            builder.RegisterType<IMessageBus>().As<MessageBus>().SingleInstance();
+
+            builder.RegisterType<Subscriber>();
 
             var container = builder.Build();
 
@@ -57,7 +59,6 @@ namespace PKB.WPF
 
         private static void SetView(IActivatingEventArgs<object> t)
         {
-
             var type = t.Component.Activator.LimitType;
 
             var baseName = type.FullName.Remove(type.FullName.Length - "Presenter".Length);
@@ -80,10 +81,10 @@ namespace PKB.WPF
 
         private static void SetAutomaticSubscribeAndUnsubscribe(IActivatingEventArgs<object> x)
         {
-            if (!(x.Instance is IHandle))
+            if (!(x.Instance is IHandler))
                 return;
 
-            var eventSubscriber = x.Context.Resolve<IEventSubscriber>();
+            var eventSubscriber = x.Context.Resolve<Subscriber>();
 
             ((IActivate)x.Instance).Activated += (_, __) =>
                eventSubscriber.Subscribe(x.Instance);

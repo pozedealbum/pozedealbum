@@ -13,6 +13,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MVPVM", "MVPVM\MVPVM.csproj
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PKB.Application", "PKB.Application\PKB.Application.csproj", "{F52A8057-094C-4D58-9942-4DE3955A3413}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PKB.Infrastructure", "PKB.Infrastructure\PKB.Infrastructure.csproj", "{9731CF05-8B71-4DFD-83FE-22D2D0EC5B90}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -39,6 +41,10 @@ Global
 		{F52A8057-094C-4D58-9942-4DE3955A3413}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{F52A8057-094C-4D58-9942-4DE3955A3413}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{F52A8057-094C-4D58-9942-4DE3955A3413}.Release|Any CPU.Build.0 = Release|Any CPU
+		{9731CF05-8B71-4DFD-83FE-22D2D0EC5B90}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{9731CF05-8B71-4DFD-83FE-22D2D0EC5B90}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{9731CF05-8B71-4DFD-83FE-22D2D0EC5B90}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{9731CF05-8B71-4DFD-83FE-22D2D0EC5B90}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

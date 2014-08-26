@@ -6,8 +6,8 @@ namespace PKB.WPF.Design
     {
         public SectionTreeViewModelDesign()
         {
-            Root = SampleData.MakeSection();
-            SelectedItem = Root.Subsections[0];
+            Resource = SampleData.MakeResource();
+            SelectedItem = Resource.Sections[0];
         }
     }
 }

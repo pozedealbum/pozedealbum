@@ -4,6 +4,6 @@ namespace PKB.WPF.Views.SectionTree
 {
     public interface ISectionTreeController : IViewAware
     {
-        void ChangeRoot(SectionViewModel root);
+        void SetResource(ResourceViewModel resource);
     }
 }

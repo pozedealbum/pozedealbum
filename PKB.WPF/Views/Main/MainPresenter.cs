@@ -17,7 +17,7 @@ namespace PKB.WPF.Views.Main
 
         protected override void OnActivate()
         {
-            _sectionTreeController.ChangeRoot(SampleData.MakeSection());
+            _sectionTreeController.SetResource(SampleData.MakeResource());
         }
     }
 }

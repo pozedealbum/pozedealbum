@@ -73,12 +73,12 @@ namespace PKB.WPF.Views.SectionTree
             return (SectionViewModel)options.DraggedItems.Single();
         }
 
-        private SectionViewModel TargetItem(TreeViewDragDropOptions options)
+        private Maybe<SectionViewModel> TargetItem(TreeViewDragDropOptions options)
         {
             if (options.DropTargetItem != null)
                 return (SectionViewModel)options.DropTargetItem.Item;
             else
-                return Presenter.ViewModel.Root;
+                return Maybe<SectionViewModel>.Nothing;
         }
 
         private static TreeViewDragDropOptions DragDropOptions(object data)

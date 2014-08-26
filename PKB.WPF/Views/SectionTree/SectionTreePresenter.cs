@@ -1,4 +1,10 @@
 ﻿using Microsoft.Practices.Prism.Commands;
+using PKB.Application;
+using PKB.Application.Commands;
+using PKB.Application.Common;
+using PKB.DomainModel.Common;
+using PKB.Infrastructure.Commanding;
+using PKB.Utility;
 using PKB.WPF.Common;
 using PKB.WPF.Interactivity;
 
@@ -7,6 +13,8 @@ namespace PKB.WPF.Views.SectionTree
     public class SectionTreePresenter : Presenter<SectionTreeViewModel>,
         ISectionTreeController
     {
+        private readonly ICommandHandler<AddNewSectionCommand> _addNewSectionHandler;
+        private readonly ICommandHandler<RemoveSectionCommand> _removeSectionHandler;
         public DelegateCommand<InsertSectionMode?> AddSectionCommand { get; private set; }
 
         public DelegateCommand DeleteSectionCommand { get; private set; }
@@ -15,8 +23,12 @@ namespace PKB.WPF.Views.SectionTree
 
         public InteractionRequest<EditSectionConfirmation> DeleteSectionRequest { get; private set; }
 
-        public SectionTreePresenter()
+        public SectionTreePresenter(
+            ICommandHandler<AddNewSectionCommand> addNewSectionHandler,
+            ICommandHandler<RemoveSectionCommand> removeSectionHandler)
         {
+            _addNewSectionHandler = addNewSectionHandler;
+            _removeSectionHandler = removeSectionHandler;
             AddSectionCommand = new DelegateCommand<InsertSectionMode?>(AddSection, CanAddSection);
             DeleteSectionCommand = new DelegateCommand(DeleteSection, CanDeleteSection);
             AddSectionRequest = new InteractionRequest<EditSectionConfirmation>();
@@ -28,26 +40,16 @@ namespace PKB.WPF.Views.SectionTree
             var c = new EditSectionConfirmation();
             c.Confirmed += () =>
             {
-                switch (insertMode)
-                {
-                    case InsertSectionMode.After:
-                        AddAfter(CurrentSection(), c.Section);
-                        break;
-                    case InsertSectionMode.Before:
-                        AddBefore(CurrentSection(), c.Section);
-                        break;
-                    case InsertSectionMode.Inside:
-                        AddInside(CurrentSection(), c.Section);
-                        break;
-                }
+                _addNewSectionHandler.Handle(new AddNewSectionCommand(
+                    resourceId: ViewModel.Resource.Id,
+                    sectionName: c.Section.Name,
+                    insertMode: insertMode.Value,
+                    currentSectionId: ViewModel.SelectedItem.HasValue
+                        ? ViewModel.SelectedItem.Value.Id
+                        : Maybe<SectionId>.Nothing));
             };
 
             AddSectionRequest.Raise(c);
-        }
-
-        private SectionViewModel CurrentSection()
-        {
-            return ViewModel.SelectedItem.ValueOrDefault(ViewModel.Root);
         }
 
         private bool CanAddSection(InsertSectionMode? insertMode)
@@ -55,7 +57,7 @@ namespace PKB.WPF.Views.SectionTree
             if (!insertMode.HasValue)
                 return false;
 
-            if (CurrentSection() == ViewModel.Root)
+            if (!ViewModel.SelectedItem.HasValue)
                 return insertMode.Value == InsertSectionMode.Inside;
 
             return true;
@@ -63,68 +65,72 @@ namespace PKB.WPF.Views.SectionTree
 
         private void DeleteSection()
         {
-            var c = new EditSectionConfirmation(CurrentSection());
-            c.Confirmed += () => GetParent(c.Section).Subsections.Remove(c.Section);
+            var c = new EditSectionConfirmation(ViewModel.SelectedItem.Value);
+            c.Confirmed += () => _removeSectionHandler.Handle(
+                new RemoveSectionCommand(
+                    resourceId: ViewModel.Resource.Id,
+                    sectionId: ViewModel.SelectedItem.Value.Id));
+
             DeleteSectionRequest.Raise(c);
         }
 
         private bool CanDeleteSection()
         {
-            return CurrentSection() != ViewModel.Root;
+            return ViewModel.SelectedItem.HasValue;
         }
 
-        public void ChangeRoot(SectionViewModel root)
+        public void SetResource(ResourceViewModel resource)
         {
             ViewModel.SelectedItem = null;
-            ViewModel.Root = root;
+            ViewModel.Resource = resource;
         }
 
-        private void AddInside(SectionViewModel selectedSection, SectionViewModel newSection)
+        //private void AddInside(SectionViewModel selectedSection, SectionViewModel newSection)
+        //{
+        //    selectedSection.Sections.Add(newSection);
+        //}
+
+        //private void AddAfter(SectionViewModel selectedSection, SectionViewModel newSection)
+        //{
+        //    GetParent(selectedSection).Sections.Insert(IndexOf(selectedSection) + 1, newSection);
+        //}
+
+        //private void AddBefore(SectionViewModel selectedSection, SectionViewModel newSection)
+        //{
+        //    GetParent(selectedSection).Sections.Insert(IndexOf(selectedSection), newSection);
+        //}
+
+        public void DragDropInside(SectionViewModel draggedSection, Maybe<SectionViewModel> targetSection)
         {
-            selectedSection.Subsections.Add(newSection);
+            //RemoveFromParent(draggedSection);
+            //AddInside(targetSection, draggedSection);
         }
 
-        private void AddAfter(SectionViewModel selectedSection, SectionViewModel newSection)
+        public void DragDropBefore(SectionViewModel draggedSection, Maybe<SectionViewModel> targetSection)
         {
-            GetParent(selectedSection).Subsections.Insert(IndexOf(selectedSection) + 1, newSection);
+            //RemoveFromParent(draggedSection);
+            //AddBefore(targetSection, draggedSection);
         }
 
-        private void AddBefore(SectionViewModel selectedSection, SectionViewModel newSection)
+        public void DragDropAfter(SectionViewModel draggedSection, Maybe<SectionViewModel> targetSection)
         {
-            GetParent(selectedSection).Subsections.Insert(IndexOf(selectedSection), newSection);
+            //RemoveFromParent(draggedSection);
+            //AddAfter(targetSection, draggedSection);
         }
 
-        public void DragDropInside(SectionViewModel draggedSection, SectionViewModel targetSection)
-        {
-            RemoveFromParent(draggedSection);
-            AddInside(targetSection, draggedSection);
-        }
+        //private static void RemoveFromParent(SectionViewModel draggedSection)
+        //{
+        //    GetParent(draggedSection).Sections.Remove(draggedSection);
+        //}
 
-        public void DragDropBefore(SectionViewModel draggedSection, SectionViewModel targetSection)
-        {
-            RemoveFromParent(draggedSection);
-            AddBefore(targetSection, draggedSection);
-        }
+        //private static int IndexOf(SectionViewModel targetSection)
+        //{
+        //    return targetSection.Parent.Value.Sections.IndexOf(targetSection);
+        //}
 
-        public void DragDropAfter(SectionViewModel draggedSection, SectionViewModel targetSection)
-        {
-            RemoveFromParent(draggedSection);
-            AddAfter(targetSection, draggedSection);
-        }
-
-        private static void RemoveFromParent(SectionViewModel draggedSection)
-        {
-            GetParent(draggedSection).Subsections.Remove(draggedSection);
-        }
-
-        private static int IndexOf(SectionViewModel targetSection)
-        {
-            return targetSection.Parent.Value.Subsections.IndexOf(targetSection);
-        }
-
-        private static SectionViewModel GetParent(SectionViewModel section)
-        {
-            return section.Parent.Value;
-        }
+        //private static SectionViewModel GetParent(SectionViewModel section)
+        //{
+        //    return section.Parent.Value;
+        //}
     }
 }

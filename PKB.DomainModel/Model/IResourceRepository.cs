@@ -7,8 +7,8 @@ using PKB.DomainModel.Common;
 
 namespace PKB.DomainModel.Model
 {
-    public interface ISectionRepository
+    public interface IResourceRepository
     {
-        Section Get(SectionId id);
+        Resource Get(ResourceId id);
     }
 }

@@ -4,11 +4,11 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{24FE2EF5-844E-4D46-9A9A-185FE4B09236}</ProjectGuid>
+    <ProjectGuid>{F52A8057-094C-4D58-9942-4DE3955A3413}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>PKB.DomainModel</RootNamespace>
-    <AssemblyName>PKB.DomainModel</AssemblyName>
+    <RootNamespace>PKB.Application</RootNamespace>
+    <AssemblyName>PKB.Application</AssemblyName>
     <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
   </PropertyGroup>
@@ -39,19 +39,17 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Common\AggregateRoot.cs" />
-    <Compile Include="Common\ResourceId.cs" />
-    <Compile Include="Events\SectionRemovedEvent.cs" />
-    <Compile Include="IAggregateRoot.cs" />
-    <Compile Include="Common\SectionId.cs" />
-    <Compile Include="IEntity.cs" />
-    <Compile Include="Events\NewSectionAddedEvent.cs" />
-    <Compile Include="Model\IResourceRepository.cs" />
-    <Compile Include="Model\Resource.cs" />
-    <Compile Include="Model\Section.cs" />
+    <Compile Include="Commands\AddNewSectionCommand.cs" />
+    <Compile Include="Commands\RemoveSectionCommand.cs" />
+    <Compile Include="Common\InsertSectionMode.cs" />
+    <Compile Include="Handlers\AddNewSectionHandler.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\PKB.DomainModel\PKB.DomainModel.csproj">
+      <Project>{24fe2ef5-844e-4d46-9a9a-185fe4b09236}</Project>
+      <Name>PKB.DomainModel</Name>
+    </ProjectReference>
     <ProjectReference Include="..\PKB.Infrastructure\PKB.Infrastructure.csproj">
       <Project>{9731cf05-8b71-4dfd-83fe-22d2d0ec5b90}</Project>
       <Name>PKB.Infrastructure</Name>
@@ -61,7 +59,6 @@
       <Name>PKB.Utility</Name>
     </ProjectReference>
   </ItemGroup>
-  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

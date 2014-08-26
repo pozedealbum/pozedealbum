@@ -4,9 +4,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace PKB.DomainModel
+namespace PKB.Infrastructure.Messaging
 {
-    public interface IDomainEvent
+    public interface IMessage
     {
     }
 }

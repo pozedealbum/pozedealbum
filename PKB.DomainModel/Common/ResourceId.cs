@@ -3,33 +3,34 @@
 namespace PKB.DomainModel.Common
 {
     [Serializable]
-    public struct SectionId : IEquatable<SectionId>
+    public struct ResourceId : IEquatable<ResourceId>
     {
-        public static readonly SectionId Empty = new SectionId();
+        public static readonly ResourceId Empty = new ResourceId();
 
         private readonly Guid _value;
 
-        private SectionId(Guid value)
+        private ResourceId(Guid value)
         {
             _value = value;
         }
 
-        public SectionId(string value)
+        public ResourceId(string value)
             : this(new Guid(value))
         {
         }
 
-        public static SectionId NewId()
+
+        public static ResourceId NewId()
         {
-            return new SectionId(Guid.NewGuid());
+            return new ResourceId(Guid.NewGuid());
         }
 
         public override bool Equals(object obj)
         {
-            return obj is SectionId && Equals((SectionId)obj);
+            return obj is ResourceId && Equals((ResourceId)obj);
         }
 
-        public bool Equals(SectionId other)
+        public bool Equals(ResourceId other)
         {
             return _value.Equals(other._value);
         }
@@ -44,12 +45,12 @@ namespace PKB.DomainModel.Common
             return _value.ToString();
         }
 
-        public static bool operator !=(SectionId a, SectionId b)
+        public static bool operator !=(ResourceId a, ResourceId b)
         {
             return a._value != b._value;
         }
 
-        public static bool operator ==(SectionId a, SectionId b)
+        public static bool operator ==(ResourceId a, ResourceId b)
         {
             return a._value == b._value;
         }

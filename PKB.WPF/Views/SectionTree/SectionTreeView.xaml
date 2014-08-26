@@ -11,6 +11,7 @@
 			 xmlns:design="clr-namespace:PKB.WPF.Design"
 			 xmlns:local="clr-namespace:PKB.WPF.Views.SectionTree"
 			 xmlns:editableSection="clr-namespace:PKB.WPF.Views.SectionTree.EditableSection"
+			 xmlns:common="clr-namespace:PKB.Application.Common;assembly=PKB.Application"
 			 x:Class="PKB.WPF.Views.SectionTree.SectionTreeView"
 			 d:DesignHeight="300" d:DesignWidth="400"
 			 mc:Ignorable="d"
@@ -40,7 +41,7 @@
 		<telerik:RadTreeView  telerik:StyleManager.Theme="Expression_Dark"
 			x:Name="_radTreeView"                 
 			ItemDoubleClick="OnItemDoubleClick"
-			ItemsSource="{Binding Root.Subsections}"
+			ItemsSource="{Binding Resource.Sections}"
 			SelectedItem="{c:BindingToMaybe SelectedItem?, Mode=TwoWay}"
 			Style="{StaticResource Local_RadTreeViewStyle}"
 			ItemContainerStyle="{StaticResource Local_RadTreeViewItemStyle}"
@@ -57,17 +58,17 @@
 						<telerik:RadMenuItem
 							Header="Inside"
 							Command="{p:PresenterBinding AddSectionCommand, Source={StaticResource PresenterProxy}}"
-							CommandParameter="{x:Static local:InsertSectionMode.Inside}" />
+							CommandParameter="{x:Static common:InsertSectionMode.Inside}" />
 
 						<telerik:RadMenuItem
 							Header="After"
 							Command="{p:PresenterBinding AddSectionCommand, Source={StaticResource PresenterProxy}}"
-							CommandParameter="{x:Static local:InsertSectionMode.After}" />
+							CommandParameter="{x:Static common:InsertSectionMode.After}" />
 
 						<telerik:RadMenuItem
 							Header="Before"
 							Command="{p:PresenterBinding AddSectionCommand, Source={StaticResource PresenterProxy}}"
-							CommandParameter="{x:Static local:InsertSectionMode.Before}" />
+							CommandParameter="{x:Static common:InsertSectionMode.Before}" />
 					</telerik:RadMenuItem>
 					<telerik:RadMenuItem
 						Header="Delete"

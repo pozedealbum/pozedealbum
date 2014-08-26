@@ -146,14 +146,6 @@
     <Compile Include="Common\PresenterLocationProvider.cs" />
     <Compile Include="Common\PresenterLocator.cs" />
     <Compile Include="Common\WpfHelper.cs" />
-    <Compile Include="EventAggregator\ComplexEventPublisher.cs" />
-    <Compile Include="EventAggregator\DictonaryHandlersManager.cs" />
-    <Compile Include="EventAggregator\EventSubscriberExtensions.cs" />
-    <Compile Include="EventAggregator\IHandle.cs" />
-    <Compile Include="EventAggregator\IEventPublisher.cs" />
-    <Compile Include="EventAggregator\IHandlersManager.cs" />
-    <Compile Include="EventAggregator\IEventSubscriber.cs" />
-    <Compile Include="EventAggregator\EventPublisher.cs" />
     <Compile Include="Interactivity\IInteraction.cs" />
     <Compile Include="Interactivity\IInteractionRequest.cs" />
     <Compile Include="Interactivity\IInteractionRequestAware.cs" />
@@ -174,6 +166,7 @@
     <Compile Include="Views\Main\MainPresenter.cs" />
     <Compile Include="Views\Main\MainViewModel.cs" />
     <Compile Include="Views\SectionTree\ISectionTreeController.cs" />
+    <Compile Include="Views\SectionTree\ResourceViewModel.cs" />
     <Compile Include="Views\SectionTree\SectionTreePresenter.cs" />
     <Compile Include="Properties\Annotations1.cs" />
     <Compile Include="Design\SectionTreeViewModelDesign.cs" />
@@ -186,7 +179,6 @@
     <Compile Include="Views\SectionTree\EditSectionConfirmation.cs" />
     <Compile Include="Interactivity\Confirmation.cs" />
     <Compile Include="Views\SectionTree\EditableSection\EditableSectionPresenter.cs" />
-    <Compile Include="Views\SectionTree\InsertSectionMode.cs" />
     <Compile Include="Interactivity\TriggerActions\ViewWindow.xaml.cs">
       <DependentUpon>ViewWindow.xaml</DependentUpon>
     </Compile>
@@ -272,6 +264,14 @@
     <ProjectReference Include="..\PKB.Application\PKB.Application.csproj">
       <Project>{f52a8057-094c-4d58-9942-4de3955a3413}</Project>
       <Name>PKB.Application</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\PKB.DomainModel\PKB.DomainModel.csproj">
+      <Project>{24fe2ef5-844e-4d46-9a9a-185fe4b09236}</Project>
+      <Name>PKB.DomainModel</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\PKB.Infrastructure\PKB.Infrastructure.csproj">
+      <Project>{9731cf05-8b71-4dfd-83fe-22d2d0ec5b90}</Project>
+      <Name>PKB.Infrastructure</Name>
     </ProjectReference>
     <ProjectReference Include="..\PKB.Utility\PKB.Utility.csproj">
       <Project>{513614fb-dcb1-46ce-aaac-b8dc59d3e087}</Project>
