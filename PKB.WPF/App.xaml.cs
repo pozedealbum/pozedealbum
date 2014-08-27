@@ -1,10 +1,14 @@
 ﻿using Autofac;
 using Autofac.Core;
 using MVPVM;
+using PKB.Application.Handlers;
+using PKB.DomainModel.Model;
+using PKB.DomainModel.Repositories;
 using PKB.Infrastructure;
 using PKB.Infrastructure.Commanding;
 using PKB.Infrastructure.Eventing;
 using PKB.Infrastructure.Messaging;
+using PKB.Utility;
 using PKB.WPF.Common;
 using PKB.WPF.Common.Interfaces;
 using System;
@@ -39,6 +43,23 @@ namespace PKB.WPF
                    SetView(t);
                });
 
+
+            var appAssembly = typeof(AddNewSectionHandler).Assembly;
+
+            executingAssembly.GetReferencedAssemblies()
+                .Where(x => x.Name.StartsWith("PKB."))
+                .ForEach(x =>
+                {
+
+                    Assembly assembly = Assembly.Load(x);
+                    builder.RegisterAssemblyTypes(assembly)
+                        .Where(t => typeof (IHandler).IsAssignableFrom(t))
+                        .As(t => ServiceMapping(t))
+                        .AsSelf();
+                });
+
+
+
             builder.RegisterType<PublishEventOnMessageBus>().As<IEventPublisher>();
             builder.RegisterGeneric(typeof(PublishEventOnMessageBus<>)).As(typeof(IEventPublisher<>));
 
@@ -48,13 +69,42 @@ namespace PKB.WPF
             builder.RegisterType<PublishMessageOnMessageBus>().As<IMessagePublisher>();
             builder.RegisterGeneric(typeof(PublishMessageOnMessageBus<>)).As(typeof(IMessagePublisher<>));
 
-            builder.RegisterType<IMessageBus>().As<MessageBus>().SingleInstance();
+            builder.RegisterType<ResourceRepository>().As<IResourceRepository>();
 
+            builder.RegisterType<MessageBus>().As<IMessageBus>().SingleInstance();
+            builder.RegisterType<MessageSubscriber>();
+            builder.RegisterType<EventSubscriber>();
+            builder.RegisterType<CommandSubscriber>();
             builder.RegisterType<Subscriber>();
 
             var container = builder.Build();
 
             PresenterLocationProvider.PresenterFactory = type => (IPresenter)container.Resolve(type);
+
+            var subscriber = container.Resolve<Subscriber>();
+
+            executingAssembly.GetReferencedAssemblies()
+                .Where(x => x.Name.StartsWith("PKB."))
+                .ForEach(x => SubscriberHandlers(container, x));
+        }
+
+        private static Type ServiceMapping(Type t)
+        {
+            var result = t.GetInterfaces().Single(x => x != typeof(IHandler) && typeof(IHandler).IsAssignableFrom(x));
+            return result;
+        }
+
+        private void SubscriberHandlers(IContainer container, AssemblyName assemblyName)
+        {
+            Assembly assembly = Assembly.Load(assemblyName);
+            var subscriber = container.Resolve<Subscriber>();
+
+            assembly.GetExportedTypes()
+                     .Where(t => typeof(IHandler).IsAssignableFrom(t) &&
+                         !t.IsInterface &&
+                         !t.IsAbstract)
+                     .Select(container.Resolve)
+                     .ForEach(subscriber.Subscribe);
         }
 
         private static void SetView(IActivatingEventArgs<object> t)
@@ -84,13 +134,13 @@ namespace PKB.WPF
             if (!(x.Instance is IHandler))
                 return;
 
-            var eventSubscriber = x.Context.Resolve<Subscriber>();
+            var subscriber = x.Context.Resolve<Subscriber>();
 
             ((IActivate)x.Instance).Activated += (_, __) =>
-               eventSubscriber.Subscribe(x.Instance);
+               subscriber.Subscribe(x.Instance);
 
             ((IDeactivate)x.Instance).Deactivated += (_, __) =>
-                eventSubscriber.Unsubscribe(x.Instance);
+                subscriber.Unsubscribe(x.Instance);
         }
     }
 }

@@ -1,4 +1,5 @@
-﻿using PKB.WPF.Views.SectionTree;
+﻿using PKB.DomainModel;
+using PKB.WPF.Views.SectionTree;
 
 namespace PKB.WPF.Design
 {

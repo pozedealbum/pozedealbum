@@ -41,6 +41,8 @@
   <ItemGroup>
     <Compile Include="Common\AggregateRoot.cs" />
     <Compile Include="Common\ResourceId.cs" />
+    <Compile Include="DTOs\ResourceDto.cs" />
+    <Compile Include="DTOs\SectionDto.cs" />
     <Compile Include="Events\SectionRemovedEvent.cs" />
     <Compile Include="IAggregateRoot.cs" />
     <Compile Include="Common\SectionId.cs" />
@@ -50,6 +52,7 @@
     <Compile Include="Model\Resource.cs" />
     <Compile Include="Model\Section.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Repositories\ResourceRepository.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\PKB.Infrastructure\PKB.Infrastructure.csproj">

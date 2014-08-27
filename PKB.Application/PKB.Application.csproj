@@ -40,9 +40,12 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Commands\AddNewSectionCommand.cs" />
+    <Compile Include="Commands\DragDropSectionCommand.cs" />
     <Compile Include="Commands\RemoveSectionCommand.cs" />
     <Compile Include="Common\InsertSectionMode.cs" />
     <Compile Include="Handlers\AddNewSectionHandler.cs" />
+    <Compile Include="Handlers\DragDropSectionHandler.cs" />
+    <Compile Include="Handlers\RemoveSectionHandler.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>

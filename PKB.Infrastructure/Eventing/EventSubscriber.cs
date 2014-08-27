@@ -2,9 +2,9 @@
 {
     public class EventSubscriber
     {
-        private readonly MessageBus _messageBus;
+        private readonly IMessageBus _messageBus;
 
-        public EventSubscriber(MessageBus messageBus)
+        public EventSubscriber(IMessageBus messageBus)
         {
             _messageBus = messageBus;
         }

@@ -1,4 +1,5 @@
-﻿using PKB.DomainModel.Common;
+﻿using System.Collections.Generic;
+using PKB.DomainModel.Common;
 using PKB.Infrastructure.Eventing;
 using PKB.Utility;
 
@@ -9,18 +10,18 @@ namespace PKB.DomainModel.Events
         public readonly SectionId SectionId;
         public readonly int SectionIndex;
         public readonly ResourceId ResourceId;
-        public readonly Maybe<SectionId> ParentSectionId;
+        public readonly IReadOnlyList<SectionId> Parents;
 
         public SectionRemovedEvent(
             SectionId sectionId,
             int sectionIndex,
             ResourceId resourceId,
-            Maybe<SectionId> parentSectionId)
+            IReadOnlyList<SectionId> parents)
         {
             SectionId = sectionId;
             SectionIndex = sectionIndex;
             ResourceId = resourceId;
-            ParentSectionId = parentSectionId;
+            Parents = parents;
         }
     }
 }

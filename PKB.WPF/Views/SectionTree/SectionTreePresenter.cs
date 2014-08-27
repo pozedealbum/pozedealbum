@@ -1,20 +1,27 @@
 ﻿using Microsoft.Practices.Prism.Commands;
-using PKB.Application;
 using PKB.Application.Commands;
 using PKB.Application.Common;
 using PKB.DomainModel.Common;
+using PKB.DomainModel.Events;
 using PKB.Infrastructure.Commanding;
+using PKB.Infrastructure.Eventing;
 using PKB.Utility;
 using PKB.WPF.Common;
 using PKB.WPF.Interactivity;
+using System.Collections.Generic;
+using System.Collections.ObjectModel;
+using System.Linq;
 
 namespace PKB.WPF.Views.SectionTree
 {
-    public class SectionTreePresenter : Presenter<SectionTreeViewModel>,
-        ISectionTreeController
+    public class SectionTreePresenter : Screen<SectionTreeViewModel>,
+        ISectionTreeController,
+        IEventHandler<NewSectionAddedEvent>,
+        IEventHandler<SectionRemovedEvent>
     {
-        private readonly ICommandHandler<AddNewSectionCommand> _addNewSectionHandler;
-        private readonly ICommandHandler<RemoveSectionCommand> _removeSectionHandler;
+        private readonly ICommandPublisher<AddNewSectionCommand> _addNewSectionPublisher;
+        private readonly ICommandPublisher<RemoveSectionCommand> _removeSectionPublisher;
+
         public DelegateCommand<InsertSectionMode?> AddSectionCommand { get; private set; }
 
         public DelegateCommand DeleteSectionCommand { get; private set; }
@@ -24,11 +31,11 @@ namespace PKB.WPF.Views.SectionTree
         public InteractionRequest<EditSectionConfirmation> DeleteSectionRequest { get; private set; }
 
         public SectionTreePresenter(
-            ICommandHandler<AddNewSectionCommand> addNewSectionHandler,
-            ICommandHandler<RemoveSectionCommand> removeSectionHandler)
+            ICommandPublisher<AddNewSectionCommand> addNewSectionPublisher,
+            ICommandPublisher<RemoveSectionCommand> removeSectionPublisher)
         {
-            _addNewSectionHandler = addNewSectionHandler;
-            _removeSectionHandler = removeSectionHandler;
+            _addNewSectionPublisher = addNewSectionPublisher;
+            _removeSectionPublisher = removeSectionPublisher;
             AddSectionCommand = new DelegateCommand<InsertSectionMode?>(AddSection, CanAddSection);
             DeleteSectionCommand = new DelegateCommand(DeleteSection, CanDeleteSection);
             AddSectionRequest = new InteractionRequest<EditSectionConfirmation>();
@@ -40,7 +47,7 @@ namespace PKB.WPF.Views.SectionTree
             var c = new EditSectionConfirmation();
             c.Confirmed += () =>
             {
-                _addNewSectionHandler.Handle(new AddNewSectionCommand(
+                _addNewSectionPublisher.Publish(new AddNewSectionCommand(
                     resourceId: ViewModel.Resource.Id,
                     sectionName: c.Section.Name,
                     insertMode: insertMode.Value,
@@ -66,7 +73,7 @@ namespace PKB.WPF.Views.SectionTree
         private void DeleteSection()
         {
             var c = new EditSectionConfirmation(ViewModel.SelectedItem.Value);
-            c.Confirmed += () => _removeSectionHandler.Handle(
+            c.Confirmed += () => _removeSectionPublisher.Publish(
                 new RemoveSectionCommand(
                     resourceId: ViewModel.Resource.Id,
                     sectionId: ViewModel.SelectedItem.Value.Id));
@@ -132,5 +139,28 @@ namespace PKB.WPF.Views.SectionTree
         //{
         //    return section.Parent.Value;
         //}
+
+        public void Handle(NewSectionAddedEvent e)
+        {
+            var newSection = new SectionViewModel(e.SectionId, e.SectionName);
+            GetSectionCollectionFor(e.Parents).Insert(e.SectionIndex, newSection);
+        }
+
+        public void Handle(SectionRemovedEvent e)
+        {
+            GetSectionCollectionFor(e.Parents).RemoveAt(e.SectionIndex);
+        }
+
+        private ObservableCollection<SectionViewModel> GetSectionCollectionFor(IReadOnlyList<SectionId> parents)
+        {
+            if (!parents.Any())
+                return ViewModel.Resource.Sections;
+
+            return parents.Reverse().Aggregate(
+                ViewModel.Resource.Sections,
+                (current, parent) => current.First(x => x.Id == parent).Subsections);
+        }
+
+
     }
 }

@@ -1,4 +1,5 @@
-﻿using PKB.DomainModel.Common;
+﻿using System.Linq;
+using PKB.DomainModel.Common;
 using PKB.DomainModel.Events;
 using PKB.Utility;
 using System;
@@ -35,17 +36,13 @@ namespace PKB.DomainModel.Model
             if (!section._resource.HasValue)
                 throw new InvalidOperationException();
 
-            _resource.Value.RegisterSection(this);
-            section._subsections.Add(section);
+
+            section._subsections.Add(this);
             _resource = section._resource;
             _parent = section;
+            _resource.Value.RegisterSection(this);
 
-            _resource.Value.Apply(new NewSectionAddedEvent(
-               sectionId: Id,
-               sectionName: Name,
-               resourceId: _resource.Value.Id,
-               sectionParentId: _parent.Value.Id,
-               sectionIndex: _subsections.Count - 1));
+            _resource.Value.Apply(CreateNewSectionAddedEvent());
         }
 
         public void InsertAfter(Section section)
@@ -59,18 +56,14 @@ namespace PKB.DomainModel.Model
             if (!section._parent.HasValue)
                 throw new InvalidOperationException();
 
-            _resource.Value.RegisterSection(this);
+
             int index = section.Index() + 1;
             _resource = section._resource;
             _parent = section._parent;
             _parent.Value._subsections.Insert(index, this);
+            _resource.Value.RegisterSection(this);
 
-            _resource.Value.Apply(new NewSectionAddedEvent(
-                sectionId: Id,
-                sectionName: Name,
-                resourceId: _resource.Value.Id,
-                sectionParentId: _parent.Value.Id,
-                sectionIndex: index));
+            _resource.Value.Apply(CreateNewSectionAddedEvent());
         }
 
         public void InsertBefore(Section section)
@@ -84,18 +77,24 @@ namespace PKB.DomainModel.Model
             if (!section._parent.HasValue)
                 throw new InvalidOperationException();
 
-            _resource.Value.RegisterSection(this);
+
             int index = section.Index();
             _resource = section._resource;
             _parent = section._parent;
             _parent.Value._subsections.Insert(index, this);
+            _resource.Value.RegisterSection(this);
 
-            _resource.Value.Apply(new NewSectionAddedEvent(
-               sectionId: Id,
-               sectionName: Name,
-               resourceId: _resource.Value.Id,
-               sectionParentId: _parent.Value.Id,
-               sectionIndex: index));
+            _resource.Value.Apply(CreateNewSectionAddedEvent());
+        }
+
+        private NewSectionAddedEvent CreateNewSectionAddedEvent()
+        {
+            return new NewSectionAddedEvent(
+                sectionId: Id,
+                sectionName: Name,
+                resourceId: _resource.Value.Id,
+                parents: GetParents().ToList(),
+                sectionIndex: Index());
         }
 
         public void InsertInside(Resource resource)
@@ -103,17 +102,13 @@ namespace PKB.DomainModel.Model
             if (_resource.HasValue)
                 throw new InvalidOperationException();
 
-            _resource.Value.RegisterSection(this);
+
             resource.AddSection(this);
             _resource = resource;
             _parent = Maybe<Section>.Nothing;
+            _resource.Value.RegisterSection(this);
 
-            _resource.Value.Apply(new NewSectionAddedEvent(
-               sectionId: Id,
-               sectionName: Name,
-               resourceId: _resource.Value.Id,
-               sectionParentId: Maybe<SectionId>.Nothing,
-               sectionIndex: _subsections.Count - 1));
+            _resource.Value.Apply(CreateNewSectionAddedEvent());
         }
 
         public void Remove()
@@ -121,21 +116,50 @@ namespace PKB.DomainModel.Model
             if (!_resource.HasValue)
                 throw new InvalidOperationException();
 
+            _resource.Value.Apply(CreateSectionRemovedEvent());
+
             if (_parent.HasValue)
                 _parent.Value._subsections.Remove(this);
             else
                 _resource.Value.RemoveSection(this);
 
-            _resource.Value.Apply(new SectionRemovedEvent(
+            _resource.Value.UnregisterSection(this);
+            _resource = Maybe<Resource>.Nothing;
+        }
+
+        public void DragDropInside(Resource resource)
+        {
+            _parent.Value._subsections.Remove(this);
+            resource.AddSection(this);
+            _parent = Maybe<Section>.Nothing;
+        }
+
+        public void DragDropInside(Section section)
+        {
+            _parent.Value._subsections.Remove(this);
+            section._subsections.Add(this);
+            _parent = section;
+        }
+
+        public void DragDropBefore(Section section)
+        {
+            _parent.Value._subsections.Remove(this);
+            section._parent.Value._subsections.Insert(section.Index(), this);
+        }
+
+        public void DragDropAfter(Section section)
+        {
+
+        }
+
+
+        private SectionRemovedEvent CreateSectionRemovedEvent()
+        {
+            return new SectionRemovedEvent(
                 sectionId: Id,
                 sectionIndex: Index(),
                 resourceId: _resource.Value.Id,
-                parentSectionId: _parent.HasValue
-                    ? _parent.Value.Id
-                    : Maybe<SectionId>.Nothing));
-
-            _resource.Value.UnregisterSection(this);
-            _resource = Maybe<Resource>.Nothing;
+                parents: GetParents().ToList());
         }
 
         private int Index()
@@ -143,6 +167,17 @@ namespace PKB.DomainModel.Model
             return _parent.HasValue
                 ? _parent.Value._subsections.IndexOf(this)
                 : _resource.Value.Sections.IndexOf(this);
+        }
+
+        private IEnumerable<SectionId> GetParents()
+        {
+            var parent = _parent;
+
+            while (parent.HasValue)
+            {
+                yield return parent.Value.Id;
+                parent = parent.Value._parent;
+            }
         }
     }
 }
